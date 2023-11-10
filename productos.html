@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>CRUD Productos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/productos.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/producto.js"></script>
+
+
+</head>
+<body ng-app="AppProductos" ng-controller="ControllerProductos">
+<div class="container-xl" >
+	<div class="table-responsive">
+		<div class="table-wrapper">
+			<div class="table-title">
+				<div class="row">
+					<div class="col-sm-6">
+						<h2><b>Productos</b></h2>
+					</div>
+					<div class="col-sm-6">
+						<a href="#" class="btn btn-success" data-toggle="modal"><i  class="material-icons">&#xE147;</i><span ng-click="showNewProducto();">Nuevo</span></a>
+						<a href="#" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i><span ng-click="showMultipleProducto();" >Eliminar</span></a>						
+					</div>
+				</div>
+			</div>
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>
+							<span class="custom-checkbox">
+								<input type="checkbox" id="selectAll">
+								<label for="selectAll"></label>
+							</span>
+						</th>
+						<th>Imagen</th>
+						<th>Titulo</th>
+						<th>Precio</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody ng-repeat="producto in productos">
+					<tr >
+						<td>
+							<span class="custom-checkbox">
+								<input type="checkbox" id="{{producto.producto_id}}" class="checkbox">
+								<label for="checkbox1"></label>
+							</span>
+						</td>
+						<td><img src="img/{{producto.img }}" title="{{ producto.img }}" width="50" height="50"></td>
+						<td>{{ producto.titulo }}</td>
+						<td>${{ producto.precio }}</td>
+						<td>
+							<a href="#" class="edit" data-toggle="modal"><i ng-click="showEdit(producto)" class="material-icons" data-toggle="tooltip" title="Editar">&#xE254;</i></a>
+							<a href="#" class="delete" data-toggle="modal"><i ng-click="showDeleteConfirmation(producto)" class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i></a>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+			
+		</div>
+	</div>        
+</div>
+<!-- New Modal HTML -->
+<div id="addEmployeeModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">						
+					<h4 class="modal-title">Agregar Producto</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<div class="form-group">
+						<label>Imagen</label>
+						<input id="fileArchNew" type="file" class="form-control" accept="image/png, image/jpeg"  required>
+						<img id="previewImage" src="img/{{newProduct.img}}" alt="Imagen del producto">
+					</div>
+					<div class="form-group">
+						<label>Titulo</label>
+						<input ng-model="newProduct.titulo" type="text" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label>Precio</label>
+						<input ng-model="newProduct.precio" type="text" class="form-control" required>
+					</div>					
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<input type="button" class="btn btn-success" id="Nuevo" value="Guardar">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- Edit Modal HTML -->
+<div id="editEmployeeModal" class="modal fade" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">						
+					<h4 class="modal-title">Modificar Producto</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<div class="form-group">
+						<label>Imagen</label>
+						<input id="fileArchEdit" type="file" class="form-control" accept="image/png, image/jpeg" >
+						<img id="previewImage" src="img/{{curretProduct.img}}" alt="Imagen del producto">
+					</div>
+					<div class="form-group">
+						<label>Titulo</label>
+						<input ng-model="curretProduct.titulo" id="titulo" type="text" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label>Precio</label>
+						<input ng-model="curretProduct.precio" id="precio" type="text" class="form-control" required>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<input type="button" class="btn btn-info" id="Modificar" value="Modificar">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- Delete Modal HTML -->
+<div id="deleteConfirmation" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">						
+					<h4 class="modal-title">Eliminar Producto</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<p>¿Está seguro de que desea eliminar el registro?</p>
+					<p class="text-warning"><small>Esta acción no se puede deshacer.</small></p>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<button type="button" class="btn btn-danger" id="deleteConfirmed">Eliminar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div id="deleteMultipleConfirmation" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">						
+					<h4 class="modal-title">Eliminar Productos seleccionados</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<p>¿Está seguro de que desea eliminar todos registros?</p>
+					<p class="text-warning"><small>Esta acción no se puede deshacer.</small></p>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<button type="button" class="btn btn-danger" id="deleteMultipleConfirmed">Eliminar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+</body>
+</html>
